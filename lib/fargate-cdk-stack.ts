@@ -1,16 +1,29 @@
 import * as cdk from 'aws-cdk-lib';
+import { Vpc, SubnetType, SecurityGroup } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class FargateCdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    // Create a VPC with public subnets
+    const vpc = new Vpc(this, 'FargateVPC', {
+      maxAzs: 2,
+      subnetConfiguration: [
+        {
+          name: 'PublicSubnet',
+          subnetType: SubnetType.PUBLIC,
+          cidrMask: 24,
+        },
+      ],
+    });
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'FargateCdkQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    // Create a security group for the ECS service
+    const securityGroup = new SecurityGroup(this, 'FargateSecurityGroup', {
+      vpc,
+      allowAllOutbound: true,
+      securityGroupName: 'FargateSG',
+    });
+
   }
 }
