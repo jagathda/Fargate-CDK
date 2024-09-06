@@ -25,5 +25,8 @@ export class FargateCdkStack extends cdk.Stack {
       securityGroupName: 'FargateSG',
     });
 
+    // Allow inbound traffic on port 80
+    securityGroup.addIngressRule(cdk.aws_ec2.Peer.anyIpv4(), cdk.aws_ec2.Port.tcp(80), 'Allow HTTP traffic');
+
   }
 }
