@@ -1,5 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Vpc, SubnetType, SecurityGroup } from 'aws-cdk-lib/aws-ec2';
+import { Cluster } from 'aws-cdk-lib/aws-ecs';
+import { ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 export class FargateCdkStack extends cdk.Stack {
@@ -27,6 +29,12 @@ export class FargateCdkStack extends cdk.Stack {
 
     // Allow inbound traffic on port 80
     securityGroup.addIngressRule(cdk.aws_ec2.Peer.anyIpv4(), cdk.aws_ec2.Port.tcp(80), 'Allow HTTP traffic');
+
+    //Create an ECS Cluster in the VPC
+    const cluster = new Cluster(this, 'FargateCluster', {
+      vpc,
+      clusterName: 'FargateCluster',
+    });
 
   }
 }
