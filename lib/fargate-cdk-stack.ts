@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Stack, StackProps } from "aws-cdk-lib";
 import { Vpc, SubnetType, SecurityGroup } from 'aws-cdk-lib/aws-ec2';
-import { Cluster } from 'aws-cdk-lib/aws-ecs';
+import { Cluster, FargateTaskDefinition } from 'aws-cdk-lib/aws-ecs';
 import { ManagedPolicy, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
@@ -43,6 +43,13 @@ export class FargateCdkStack extends cdk.Stack {
       managedPolicies: [
         ManagedPolicy.fromAwsManagedPolicyName('service-role/AmazoneECSTaskExecutionRolePpolicy'),
       ],
+    });
+
+    // Create a Fargate task definition
+    const taskDefinition = new FargateTaskDefinition(this, 'FargateTaskDef', {
+      memoryLimitMiB: 512,
+      cpu: 256,
+      executionRole: excutionRole,
     });
 
   }
