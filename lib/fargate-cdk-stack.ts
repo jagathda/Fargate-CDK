@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Stack, StackProps } from "aws-cdk-lib";
 import { Vpc, SubnetType, SecurityGroup } from 'aws-cdk-lib/aws-ec2';
-import { Cluster, ContainerImage, FargateTaskDefinition } from 'aws-cdk-lib/aws-ecs';
+import { Cluster, ContainerImage, FargateService, FargateTaskDefinition } from 'aws-cdk-lib/aws-ecs';
 import { ManagedPolicy, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
@@ -55,8 +55,16 @@ export class FargateCdkStack extends cdk.Stack {
     // Add a container to the task definition
     taskDefinition.addContainer('nginxContainer', {
       image: ContainerImage.fromRegistry('nginx:latest'),
-      portMappings: [{ containerPort: 80}],
+      portMappings: [{ containerPort: 80 }],
     });
 
+    // Created Fargate service
+    new FargateService(this, 'FargateService', {
+      cluster,
+      taskDefinition,
+      assignPublicIp: true,
+      securityGroups: [securityGroup],
+      desiredCount: 1,
+    });
   }
 }
