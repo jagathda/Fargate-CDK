@@ -41,7 +41,7 @@ export class FargateCdkStack extends cdk.Stack {
     const excutionRole = new Role(this, 'EcsTaskExcutionRole', {
       assumedBy: new ServicePrincipal('ecs-tasks.amazonaws.com'),
       managedPolicies: [
-        ManagedPolicy.fromAwsManagedPolicyName('service-role/AmazoneECSTaskExecutionRolePpolicy'),
+        ManagedPolicy.fromAwsManagedPolicyName('service-role/AmazonECSTaskExecutionRolePolicy'),
       ],
     });
 
