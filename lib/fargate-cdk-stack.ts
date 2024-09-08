@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Stack, StackProps } from "aws-cdk-lib";
 import { Vpc, SubnetType, SecurityGroup } from 'aws-cdk-lib/aws-ec2';
-import { Cluster, FargateTaskDefinition } from 'aws-cdk-lib/aws-ecs';
+import { Cluster, ContainerImage, FargateTaskDefinition } from 'aws-cdk-lib/aws-ecs';
 import { ManagedPolicy, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
@@ -50,6 +50,12 @@ export class FargateCdkStack extends cdk.Stack {
       memoryLimitMiB: 512,
       cpu: 256,
       executionRole: excutionRole,
+    });
+
+    // Add a container to the task definition
+    taskDefinition.addContainer('nginxContainer', {
+      image: ContainerImage.fromRegistry('nginx:latest'),
+      portMappings: [{ containerPort: 80}],
     });
 
   }
